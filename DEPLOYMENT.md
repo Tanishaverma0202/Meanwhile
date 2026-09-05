@@ -77,7 +77,12 @@ PythonAnywhere does not run this repository's Docker container directly. Deploy 
 4. Set the virtualenv path to `/home/YOUR_USERNAME/Meanwhile/venv`.
 5. Open the WSGI configuration file shown by PythonAnywhere, usually `/var/www/YOUR_USERNAME_pythonanywhere_com_wsgi.py`, and replace its contents with:
   ```python
+  import os
   import sys
+
+  os.environ.setdefault("SECRET_KEY", "replace-with-a-long-random-secret")
+  os.environ.setdefault("DATABASE_URL", "sqlite:////home/YOUR_USERNAME/Meanwhile/backend/meanwhile.db")
+  os.environ.setdefault("MARKET_DATA_PROVIDER", "MOCK")
 
   sys.path.insert(0, "/home/YOUR_USERNAME/Meanwhile/backend")
 
@@ -89,6 +94,15 @@ PythonAnywhere does not run this repository's Docker container directly. Deploy 
   - `DATABASE_URL`: `sqlite:////home/YOUR_USERNAME/Meanwhile/backend/meanwhile.db`
   - `MARKET_DATA_PROVIDER`: `MOCK`
 7. Reload the web app and open the PythonAnywhere URL. The frontend and `/api/v1/` API use the same origin.
+
+If the error still says `No module named 'a2wsgi'`, the Web tab is using a different virtualenv. In Bash, run these exact checks:
+
+```bash
+/home/YOUR_USERNAME/Meanwhile/venv/bin/python -m pip install --upgrade -r /home/YOUR_USERNAME/Meanwhile/backend/requirements.txt
+/home/YOUR_USERNAME/Meanwhile/venv/bin/python -c "from a2wsgi import ASGIMiddleware; print('a2wsgi OK')"
+```
+
+The second command must print `a2wsgi OK`. Set the Web tab virtualenv to that same `/home/YOUR_USERNAME/Meanwhile/venv` path, then reload. Do not put `from a2wsgi import ASGIMiddleware` in the PythonAnywhere WSGI file; it should only contain `from wsgi import application` after adding the backend path.
 
 The included `backend/wsgi.py` adapts FastAPI for PythonAnywhere and serves the committed `frontend/dist` with SPA fallback. Rebuild the frontend locally with `cd frontend; npm install; npm run build` whenever frontend code changes, then commit the updated `frontend/dist` files. SQLite is suitable for a demo, but PythonAnywhere filesystem storage is not a substitute for a managed production database.
 ### Render
