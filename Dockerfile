@@ -27,7 +27,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./
 COPY --from=frontend-build /frontend/dist /usr/share/nginx/html
 COPY nginx.single.conf /etc/nginx/sites-available/default
-COPY supervisord.conf /etc/supervisor/conf.d/meanwhile.conf
+COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN mkdir -p /app/data && chmod +x /usr/local/bin/docker-entrypoint.sh
