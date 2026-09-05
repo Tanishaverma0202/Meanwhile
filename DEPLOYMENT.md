@@ -30,13 +30,33 @@ Platforms that expect a `Dockerfile` at the repository root can use the included
 
 ```bash
 docker build -t meanwhile .
-docker run --rm -p 3000:80 meanwhile
+docker run --rm -p 3000:7860 meanwhile
 ```
 
 - **Application:** http://localhost:3000
 - **Health Check:** http://localhost:3000/health
 
 The root image serves the frontend through Nginx and proxies `/api/` and `/health` to the bundled FastAPI backend. Use the Compose setup above when separate frontend and backend containers are preferred.
+
+### Hugging Face Spaces (no card required)
+
+Create a new public Space, choose **Docker** as the SDK, and upload or connect this repository. The metadata at the top of `README.md` tells Spaces to build the root `Dockerfile` and expose port `7860`. Set these Space variables:
+
+- `DATABASE_URL=sqlite:///./meanwhile.db`
+- `MARKET_DATA_PROVIDER=MOCK`
+
+The free CPU Space may sleep when idle, and its SQLite data is not durable.
+
+### Cloudflare Pages
+
+Cloudflare Pages hosts the React frontend only. Create a Pages project connected to this repository with:
+
+- **Root directory:** `frontend`
+- **Build command:** `npm run build`
+- **Build output directory:** `dist`
+- **Environment variable:** `VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api/v1`
+
+The FastAPI backend must be deployed separately, for example on PythonAnywhere. If no `VITE_API_BASE_URL` is set, the frontend uses `/api/v1`, which only works when a proxy or same-origin backend is configured.
 
 ### Render
 

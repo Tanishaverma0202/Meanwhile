@@ -13,7 +13,8 @@ FROM python:3.14-slim
 WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    PORT=7860
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
@@ -31,6 +32,6 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN mkdir -p /app/data && chmod +x /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 80
+EXPOSE 7860
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

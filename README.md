@@ -1,3 +1,11 @@
+---
+title: Meanwhile
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+---
+
 # Meanwhile
 
 **Know what changed while you were away.**
