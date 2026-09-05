@@ -24,6 +24,20 @@ docker-compose ps
 - **Backend API:** http://localhost:8000
 - **Health Check:** http://localhost:8000/health
 
+### Single-container Docker deployment
+
+Platforms that expect a `Dockerfile` at the repository root can use the included root image:
+
+```bash
+docker build -t meanwhile .
+docker run --rm -p 3000:80 meanwhile
+```
+
+- **Application:** http://localhost:3000
+- **Health Check:** http://localhost:3000/health
+
+The root image serves the frontend through Nginx and proxies `/api/` and `/health` to the bundled FastAPI backend. Use the Compose setup above when separate frontend and backend containers are preferred.
+
 ---
 
 ## 2. Deploying to Vercel (Frontend) & Render / Railway (Backend)
