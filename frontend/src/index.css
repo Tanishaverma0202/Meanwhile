@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    box-sizing: border-box;
+    /* Ensure full viewport coverage on every device */
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+  body {
+    min-height: 100%;
+    width: 100%;
+    background-color: #F7FAFC;
+    color: #16324A;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  #root {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Fluid full-width container helper */
+@layer utilities {
+  .full-bleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+}
+
+/* Subtle scrollbars */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: #F1F7FC; }
+::-webkit-scrollbar-thumb  { background: #CBD5E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* Row hover — shared utility */
+.table-row-hover { transition: background-color 0.12s ease; }
+.table-row-hover:hover { background-color: #F1F7FC; }
+
+/* Prevent table content overflow on mobile */
+.overflow-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
