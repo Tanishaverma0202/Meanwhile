@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 
-from a2wsgi import WSGIMiddleware
+from a2wsgi import ASGIMiddleware
 from fastapi.staticfiles import StaticFiles
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -14,4 +14,4 @@ if frontend_dist.is_dir():
     app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
 
 
-application = WSGIMiddleware(app)
+application = ASGIMiddleware(app)

@@ -83,7 +83,7 @@ PythonAnywhere does not run this repository's Docker container directly. Deploy 
 
   from wsgi import application
   ```
-  This imports the repository's `backend/wsgi.py`. Do not use `ASGIMiddleware`; the correct adapter is `WSGIMiddleware`, already defined in that file.
+  This imports the repository's `backend/wsgi.py`, which uses `ASGIMiddleware` to adapt FastAPI's ASGI interface to PythonAnywhere's WSGI server.
 6. Add these environment variables in the Web tab or WSGI file:
   - `SECRET_KEY`: a long random value
   - `DATABASE_URL`: `sqlite:////home/YOUR_USERNAME/Meanwhile/backend/meanwhile.db`
