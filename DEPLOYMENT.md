@@ -58,6 +58,39 @@ Cloudflare Pages hosts the React frontend only. Create a Pages project connected
 
 The FastAPI backend must be deployed separately, for example on PythonAnywhere. If no `VITE_API_BASE_URL` is set, the frontend uses `/api/v1`, which only works when a proxy or same-origin backend is configured.
 
+### PythonAnywhere
+
+PythonAnywhere does not run this repository's Docker container directly. Deploy the repository as one Python web app instead:
+
+1. Clone the repository into PythonAnywhere and open a Bash console.
+2. Create and activate a virtual environment, then install the backend dependencies:
+  ```bash
+  cd ~/Meanwhile
+  python3.13 -m venv venv
+  source venv/bin/activate
+  python -m pip install --upgrade pip
+  python -m pip install -r backend/requirements.txt
+  python -c "from a2wsgi import WSGIMiddleware; print('a2wsgi installed')"
+  ```
+   PythonAnywhere does not provide `npm` in a standard Bash console. The repository includes the built React files in `frontend/dist`, so no frontend build is required there.
+3. In the PythonAnywhere **Web** tab, create a manual web app using the same Python version as the virtual environment.
+4. Set the virtualenv path to `/home/YOUR_USERNAME/Meanwhile/venv`.
+5. Open the WSGI configuration file shown by PythonAnywhere, usually `/var/www/YOUR_USERNAME_pythonanywhere_com_wsgi.py`, and replace its contents with:
+  ```python
+  import sys
+
+  sys.path.insert(0, "/home/YOUR_USERNAME/Meanwhile/backend")
+
+  from wsgi import application
+  ```
+  This imports the repository's `backend/wsgi.py`. Do not use `ASGIMiddleware`; the correct adapter is `WSGIMiddleware`, already defined in that file.
+6. Add these environment variables in the Web tab or WSGI file:
+  - `SECRET_KEY`: a long random value
+  - `DATABASE_URL`: `sqlite:////home/YOUR_USERNAME/Meanwhile/backend/meanwhile.db`
+  - `MARKET_DATA_PROVIDER`: `MOCK`
+7. Reload the web app and open the PythonAnywhere URL. The frontend and `/api/v1/` API use the same origin.
+
+The included `backend/wsgi.py` adapts FastAPI for PythonAnywhere and serves the committed `frontend/dist` with SPA fallback. Rebuild the frontend locally with `cd frontend; npm install; npm run build` whenever frontend code changes, then commit the updated `frontend/dist` files. SQLite is suitable for a demo, but PythonAnywhere filesystem storage is not a substitute for a managed production database.
 ### Render
 
 Create a new **Web Service** in Render and connect this repository. Use these settings:
