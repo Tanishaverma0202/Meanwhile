@@ -38,6 +38,18 @@ docker run --rm -p 3000:80 meanwhile
 
 The root image serves the frontend through Nginx and proxies `/api/` and `/health` to the bundled FastAPI backend. Use the Compose setup above when separate frontend and backend containers are preferred.
 
+### Render
+
+Create a new **Web Service** in Render and connect this repository. Use these settings:
+
+- **Environment:** Docker
+- **Dockerfile Path:** `./Dockerfile`
+- **Docker Build Context Directory:** `.`
+- **Health Check Path:** `/health`
+- **Environment Variables:** `DATABASE_URL=sqlite:///./meanwhile.db`, `MARKET_DATA_PROVIDER=MOCK`
+
+Render will build the root `Dockerfile` and deploy the application at the generated Render URL. The existing `render.yaml` is also available if Blueprint support appears in your Render account later.
+
 ---
 
 ## 2. Deploying to Vercel (Frontend) & Render / Railway (Backend)
